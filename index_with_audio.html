@@ -1,0 +1,1570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📚 English Learning Game - Master Words & Win! 🏆</title>
+    <meta name="description" content="Interactive English learning game with background music! Build vocabulary, practice grammar, and compete with friends. Perfect for students and language learners!">
+    <meta name="keywords" content="English learning, vocabulary game, grammar practice, education, language learning, ESL, background music">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourusername.github.io/english-learning-game/">
+    <meta property="og:title" content="📚 English Learning Game - Master Words & Win! 🏆">
+    <meta property="og:description" content="Interactive English learning game with music that makes vocabulary and grammar fun! Challenge yourself and friends!">
+    <meta property="og:image" content="https://yourusername.github.io/english-learning-game/preview.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://yourusername.github.io/english-learning-game/">
+    <meta property="twitter:title" content="📚 English Learning Game - Master Words & Win! 🏆">
+    <meta property="twitter:description" content="Interactive English learning game with music that makes vocabulary and grammar fun! Challenge yourself and friends!">
+    <meta property="twitter:image" content="https://yourusername.github.io/english-learning-game/preview.png">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Arial', sans-serif;
+            position: relative;
+        }
+
+        /* Mobile-first responsive design */
+        .game-container {
+            width: 100%;
+            max-width: 400px;
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            position: relative;
+            border: 2px solid #4ecdc4;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(78, 205, 196, 0.5);
+        }
+
+        .header {
+            background: rgba(78, 205, 196, 0.9);
+            color: white;
+            text-align: center;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            position: relative;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-title {
+            flex: 1;
+            text-align: center;
+        }
+
+        .audio-controls {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            display: flex;
+            gap: 8px;
+            z-index: 200;
+        }
+
+        .audio-btn {
+            width: 35px;
+            height: 35px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid white;
+            border-radius: 50%;
+            color: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .audio-btn:hover, .audio-btn:active {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .audio-btn.muted {
+            background: rgba(255, 0, 0, 0.3);
+            border-color: #ff4757;
+        }
+
+        .volume-slider {
+            position: absolute;
+            top: 55px;
+            right: 15px;
+            width: 100px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+            cursor: pointer;
+            z-index: 200;
+            display: none;
+        }
+
+        .volume-fill {
+            height: 100%;
+            background: #4ecdc4;
+            border-radius: 2px;
+            width: 70%;
+            transition: width 0.2s;
+        }
+
+        .volume-knob {
+            position: absolute;
+            top: -4px;
+            right: 30%;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: right 0.2s;
+        }
+
+        .learning-branding {
+            position: absolute;
+            top: 60px;
+            right: 20px;
+            color: #4ecdc4;
+            font-size: 12px;
+            font-weight: bold;
+            z-index: 200;
+        }
+
+        .game-area {
+            width: 100%;
+            height: calc(100vh - 140px);
+            position: relative;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .score-board {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 12px;
+            border-radius: 10px;
+        }
+
+        .level-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: #4ecdc4;
+            font-size: 16px;
+            font-weight: bold;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 12px;
+            border-radius: 10px;
+        }
+
+        .question-card {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            color: #1a1a2e;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border: 3px solid #4ecdc4;
+            z-index: 100;
+            max-width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .question-type {
+            font-size: 12px;
+            color: #667eea;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .answers-grid {
+            position: absolute;
+            top: 220px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            width: 90%;
+            z-index: 100;
+        }
+
+        .answer-option {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid white;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .answer-option:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .answer-option.correct {
+            background: linear-gradient(45deg, #00ff88, #00cc66);
+            animation: correctPulse 0.6s ease-in-out;
+        }
+
+        .answer-option.wrong {
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+            animation: wrongShake 0.6s ease-in-out;
+        }
+
+        @keyframes correctPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            overflow: hidden;
+            z-index: 100;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4ecdc4, #00ff88);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .controls {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .control-btn {
+            width: 60px;
+            height: 60px;
+            background: rgba(78, 205, 196, 0.8);
+            border: 3px solid white;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .control-btn:hover, .control-btn:active {
+            background: #4ecdc4;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(78, 205, 196, 0.8);
+        }
+
+        .instruction {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            text-align: center;
+            font-size: 12px;
+            z-index: 100;
+            max-width: 90%;
+        }
+
+        .learning-tips {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #4ecdc4;
+            text-align: center;
+            font-size: 11px;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+            z-index: 100;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .game-over {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(78, 205, 196, 0.95);
+            color: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            display: none;
+            z-index: 500;
+            max-width: 90%;
+        }
+
+        .final-stats {
+            margin: 15px 0;
+            font-size: 14px;
+        }
+
+        .restart-btn {
+            background: white;
+            color: #4ecdc4;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+
+        .restart-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .share-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .share-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 320px;
+            margin: 20px;
+        }
+
+        .share-btn {
+            background: #4ecdc4;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 8px;
+            transition: all 0.3s;
+        }
+
+        .share-btn:hover {
+            background: #45b7aa;
+            transform: scale(1.05);
+        }
+
+        .floating-words {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .floating-word {
+            position: absolute;
+            color: rgba(78, 205, 196, 0.3);
+            font-size: 12px;
+            font-weight: bold;
+            animation: floatUp 4s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .streak-indicator {
+            position: absolute;
+            top: 60px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #00ff88;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 100;
+            display: none;
+        }
+
+        .audio-upload {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 200;
+        }
+
+        .upload-btn {
+            background: rgba(78, 205, 196, 0.8);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .upload-btn:hover {
+            background: #4ecdc4;
+            transform: scale(1.05);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .music-indicator {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #4ecdc4;
+            font-size: 12px;
+            z-index: 200;
+            display: none;
+            animation: musicPulse 2s infinite;
+        }
+
+        @keyframes musicPulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 480px) {
+            .game-container {
+                max-width: 100%;
+                border-radius: 0;
+                border: none;
+            }
+            
+            .header {
+                font-size: 14px;
+                padding: 10px;
+            }
+            
+            .audio-controls {
+                top: 12px;
+                right: 12px;
+                gap: 6px;
+            }
+            
+            .audio-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 12px;
+            }
+            
+            .question-card {
+                font-size: 16px;
+                padding: 15px;
+            }
+            
+            .answer-option {
+                font-size: 13px;
+                padding: 12px;
+                min-height: 50px;
+            }
+            
+            .control-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 18px;
+            }
+        }
+
+        /* Landscape mode adjustments */
+        @media (orientation: landscape) and (max-height: 600px) {
+            .game-container {
+                height: 100vh;
+                max-height: none;
+            }
+            
+            .question-card {
+                top: 60px;
+                font-size: 16px;
+                padding: 15px;
+            }
+            
+            .answers-grid {
+                top: 160px;
+            }
+            
+            .controls {
+                bottom: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Audio Elements -->
+    <audio id="backgroundMusic" loop preload="auto">
+        <!-- You can add default background music here -->
+        <!-- <source src="background.mp3" type="audio/mpeg"> -->
+    </audio>
+    
+    <audio id="correctSound" preload="auto">
+        <!-- You can add default correct sound here -->
+        <!-- <source src="correct.mp3" type="audio/mpeg"> -->
+    </audio>
+    
+    <audio id="wrongSound" preload="auto">
+        <!-- You can add default wrong sound here -->
+        <!-- <source src="wrong.mp3" type="audio/mpeg"> -->
+    </audio>
+    
+    <audio id="levelUpSound" preload="auto">
+        <!-- You can add default level up sound here -->
+        <!-- <source src="levelup.mp3" type="audio/mpeg"> -->
+    </audio>
+
+    <div class="game-container">
+        <div class="header">
+            <div class="header-title">📚 English Learning Game 🏆</div>
+            <div class="audio-controls">
+                <div class="audio-btn" id="musicToggle" title="Toggle Music">🎵</div>
+                <div class="audio-btn" id="soundToggle" title="Toggle Sound Effects">🔊</div>
+                <div class="audio-btn" id="volumeToggle" title="Volume Control">🎛️</div>
+            </div>
+        </div>
+        
+        <div class="volume-slider" id="volumeSlider">
+            <div class="volume-fill" id="volumeFill"></div>
+            <div class="volume-knob" id="volumeKnob"></div>
+        </div>
+        
+        <div class="music-indicator" id="musicIndicator">🎵 Music Playing</div>
+        <div class="learning-branding">📚 Learn English</div>
+        
+        <div class="floating-words" id="floatingWords"></div>
+        
+        <div class="game-area" id="gameArea">
+            <div class="score-board">
+                Score: <span id="score">0</span>
+            </div>
+            
+            <div class="level-indicator">
+                Level: <span id="level">1</span>
+            </div>
+            
+            <div class="streak-indicator" id="streakIndicator">
+                🔥 Streak: <span id="streak">0</span>
+            </div>
+            
+            <div class="question-card" id="questionCard">
+                <div class="question-type" id="questionType">VOCABULARY</div>
+                <div id="questionText">What does "Beautiful" mean?</div>
+            </div>
+            
+            <div class="answers-grid" id="answersGrid">
+                <div class="answer-option" onclick="selectAnswer(0)">Ugly</div>
+                <div class="answer-option" onclick="selectAnswer(1)">Pretty</div>
+                <div class="answer-option" onclick="selectAnswer(2)">Sad</div>
+                <div class="answer-option" onclick="selectAnswer(3)">Fast</div>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <div class="control-btn" id="hintBtn" title="Get Hint">💡</div>
+            <div class="control-btn" id="skipBtn" title="Skip Question">⏭️</div>
+            <div class="control-btn" id="pauseBtn" title="Pause Game">⏸️</div>
+        </div>
+        
+        <div class="instruction">
+            Choose the correct answer! Build your vocabulary! 📚
+        </div>
+        
+        <div class="learning-tips">
+            Learn new words every day! 🌟 Challenge your friends!
+        </div>
+        
+        <div class="audio-upload">
+            <input type="file" id="musicFileInput" class="file-input" accept="audio/*" multiple>
+            <button class="upload-btn" onclick="document.getElementById('musicFileInput').click()">
+                🎵 Upload Music
+            </button>
+        </div>
+        
+        <div class="game-over" id="gameOver">
+            <h2>🎉 Learning Complete! 🎉</h2>
+            <div class="final-stats">
+                <p>Final Score: <span id="finalScore">0</span></p>
+                <p>Words Learned: <span id="wordsLearned">0</span></p>
+                <p>Accuracy: <span id="accuracy">0</span>%</p>
+                <p>Best Streak: <span id="bestStreak">0</span></p>
+            </div>
+            <p>Keep practicing to improve your English! 📚</p>
+            <button class="restart-btn" onclick="restartGame()">Study Again 🔄</button>
+            <button class="restart-btn" onclick="shareProgress()">Share Progress 📱</button>
+        </div>
+        
+        <div class="share-overlay" id="shareOverlay">
+            <div class="share-content">
+                <h3>📚 Share Your Progress! 🎉</h3>
+                <p id="shareText">I learned [words] new English words! Join me in this fun learning game! 📚✨</p>
+                <button class="share-btn" onclick="copyShareText()">Copy Text 📋</button>
+                <button class="share-btn" onclick="shareOnSocial('twitter')">Share on Twitter 🐦</button>
+                <button class="share-btn" onclick="shareOnSocial('facebook')">Share on Facebook 📘</button>
+                <button class="share-btn" onclick="closeShare()">Close ❌</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Audio Management System
+        class AudioManager {
+            constructor() {
+                this.backgroundMusic = document.getElementById('backgroundMusic');
+                this.correctSound = document.getElementById('correctSound');
+                this.wrongSound = document.getElementById('wrongSound');
+                this.levelUpSound = document.getElementById('levelUpSound');
+                
+                this.isMusicEnabled = true;
+                this.isSoundEnabled = true;
+                this.volume = 0.7;
+                this.currentTrackIndex = 0;
+                this.playlist = [];
+                
+                this.initializeAudio();
+                this.setupAudioControls();
+                this.loadAudioSettings();
+            }
+            
+            initializeAudio() {
+                // Set initial volume
+                this.setVolume(this.volume);
+                
+                // Create default sound effects using Web Audio API
+                this.createDefaultSounds();
+                
+                // Handle mobile audio autoplay restrictions
+                this.handleMobileAudio();
+            }
+            
+            createDefaultSounds() {
+                // Create AudioContext for generating default sounds
+                try {
+                    this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                    this.createCorrectSound();
+                    this.createWrongSound();
+                    this.createLevelUpSound();
+                } catch (e) {
+                    console.log('Web Audio API not supported, using fallback');
+                }
+            }
+            
+            createCorrectSound() {
+                // Generate a pleasant correct answer sound
+                this.correctBuffer = this.generateTone(800, 0.2, 'sine');
+            }
+            
+            createWrongSound() {
+                // Generate a gentle wrong answer sound
+                this.wrongBuffer = this.generateTone(300, 0.3, 'sawtooth');
+            }
+            
+            createLevelUpSound() {
+                // Generate a triumphant level up sound
+                this.levelUpBuffer = this.generateChord([523, 659, 784], 0.5);
+            }
+            
+            generateTone(frequency, duration, type = 'sine') {
+                if (!this.audioContext) return null;
+                
+                const sampleRate = this.audioContext.sampleRate;
+                const buffer = this.audioContext.createBuffer(1, duration * sampleRate, sampleRate);
+                const data = buffer.getChannelData(0);
+                
+                for (let i = 0; i < buffer.length; i++) {
+                    const time = i / sampleRate;
+                    let value = 0;
+                    
+                    if (type === 'sine') {
+                        value = Math.sin(2 * Math.PI * frequency * time);
+                    } else if (type === 'sawtooth') {
+                        value = 2 * (time * frequency % 1) - 1;
+                    }
+                    
+                    // Apply envelope
+                    const envelope = Math.exp(-time * 3);
+                    data[i] = value * envelope * 0.3;
+                }
+                
+                return buffer;
+            }
+            
+            generateChord(frequencies, duration) {
+                if (!this.audioContext) return null;
+                
+                const sampleRate = this.audioContext.sampleRate;
+                const buffer = this.audioContext.createBuffer(1, duration * sampleRate, sampleRate);
+                const data = buffer.getChannelData(0);
+                
+                for (let i = 0; i < buffer.length; i++) {
+                    const time = i / sampleRate;
+                    let value = 0;
+                    
+                    frequencies.forEach(freq => {
+                        value += Math.sin(2 * Math.PI * freq * time);
+                    });
+                    
+                    value /= frequencies.length;
+                    
+                    // Apply envelope
+                    const envelope = Math.exp(-time * 2);
+                    data[i] = value * envelope * 0.2;
+                }
+                
+                return buffer;
+            }
+            
+            playBuffer(buffer) {
+                if (!this.audioContext || !buffer || !this.isSoundEnabled) return;
+                
+                const source = this.audioContext.createBufferSource();
+                const gainNode = this.audioContext.createGain();
+                
+                source.buffer = buffer;
+                gainNode.gain.value = this.volume;
+                
+                source.connect(gainNode);
+                gainNode.connect(this.audioContext.destination);
+                source.start();
+            }
+            
+            handleMobileAudio() {
+                // Handle mobile autoplay restrictions
+                const enableAudio = () => {
+                    if (this.audioContext && this.audioContext.state === 'suspended') {
+                        this.audioContext.resume();
+                    }
+                    
+                    // Try to start background music if available
+                    if (this.backgroundMusic.src && this.isMusicEnabled) {
+                        this.backgroundMusic.play().catch(e => {
+                            console.log('Autoplay prevented:', e);
+                        });
+                    }
+                    
+                    // Remove event listeners after first interaction
+                    document.removeEventListener('touchstart', enableAudio);
+                    document.removeEventListener('click', enableAudio);
+                };
+                
+                document.addEventListener('touchstart', enableAudio);
+                document.addEventListener('click', enableAudio);
+            }
+            
+            setupAudioControls() {
+                // Music toggle
+                document.getElementById('musicToggle').addEventListener('click', () => {
+                    this.toggleMusic();
+                });
+                
+                // Sound effects toggle
+                document.getElementById('soundToggle').addEventListener('click', () => {
+                    this.toggleSounds();
+                });
+                
+                // Volume control toggle
+                document.getElementById('volumeToggle').addEventListener('click', () => {
+                    this.toggleVolumeSlider();
+                });
+                
+                // Volume slider
+                this.setupVolumeSlider();
+                
+                // File upload
+                document.getElementById('musicFileInput').addEventListener('change', (e) => {
+                    this.handleMusicUpload(e);
+                });
+            }
+            
+            setupVolumeSlider() {
+                const slider = document.getElementById('volumeSlider');
+                const fill = document.getElementById('volumeFill');
+                const knob = document.getElementById('volumeKnob');
+                
+                let isDragging = false;
+                
+                const updateVolume = (clientX) => {
+                    const rect = slider.getBoundingClientRect();
+                    const percentage = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
+                    
+                    this.setVolume(percentage);
+                    fill.style.width = (percentage * 100) + '%';
+                    knob.style.right = ((1 - percentage) * 100) + '%';
+                };
+                
+                slider.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    updateVolume(e.clientX);
+                });
+                
+                slider.addEventListener('touchstart', (e) => {
+                    isDragging = true;
+                    updateVolume(e.touches[0].clientX);
+                });
+                
+                document.addEventListener('mousemove', (e) => {
+                    if (isDragging) updateVolume(e.clientX);
+                });
+                
+                document.addEventListener('touchmove', (e) => {
+                    if (isDragging) updateVolume(e.touches[0].clientX);
+                });
+                
+                document.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+                
+                document.addEventListener('touchend', () => {
+                    isDragging = false;
+                });
+            }
+            
+            toggleMusic() {
+                this.isMusicEnabled = !this.isMusicEnabled;
+                const btn = document.getElementById('musicToggle');
+                const indicator = document.getElementById('musicIndicator');
+                
+                if (this.isMusicEnabled) {
+                    btn.textContent = '🎵';
+                    btn.classList.remove('muted');
+                    if (this.backgroundMusic.src) {
+                        this.backgroundMusic.play().catch(e => console.log('Play prevented:', e));
+                        indicator.style.display = 'block';
+                    }
+                } else {
+                    btn.textContent = '🔇';
+                    btn.classList.add('muted');
+                    this.backgroundMusic.pause();
+                    indicator.style.display = 'none';
+                }
+                
+                this.saveAudioSettings();
+            }
+            
+            toggleSounds() {
+                this.isSoundEnabled = !this.isSoundEnabled;
+                const btn = document.getElementById('soundToggle');
+                
+                if (this.isSoundEnabled) {
+                    btn.textContent = '🔊';
+                    btn.classList.remove('muted');
+                } else {
+                    btn.textContent = '🔇';
+                    btn.classList.add('muted');
+                }
+                
+                this.saveAudioSettings();
+            }
+            
+            toggleVolumeSlider() {
+                const slider = document.getElementById('volumeSlider');
+                slider.style.display = slider.style.display === 'block' ? 'none' : 'block';
+            }
+            
+            setVolume(volume) {
+                this.volume = Math.max(0, Math.min(1, volume));
+                
+                if (this.backgroundMusic) {
+                    this.backgroundMusic.volume = this.volume * 0.6; // Background music softer
+                }
+                
+                if (this.correctSound) this.correctSound.volume = this.volume;
+                if (this.wrongSound) this.wrongSound.volume = this.volume;
+                if (this.levelUpSound) this.levelUpSound.volume = this.volume;
+                
+                this.saveAudioSettings();
+            }
+            
+            handleMusicUpload(event) {
+                const files = Array.from(event.target.files);
+                
+                files.forEach((file, index) => {
+                    if (file.type.startsWith('audio/')) {
+                        const url = URL.createObjectURL(file);
+                        this.playlist.push({
+                            name: file.name,
+                            url: url
+                        });
+                        
+                        // If this is the first uploaded track, start playing it
+                        if (this.playlist.length === 1) {
+                            this.playTrack(0);
+                        }
+                    }
+                });
+                
+                if (this.playlist.length > 0) {
+                    alert(`🎵 ${files.length} music file(s) uploaded successfully! 🎉`);
+                    this.setupPlaylistNavigation();
+                }
+            }
+            
+            playTrack(index) {
+                if (index >= 0 && index < this.playlist.length) {
+                    this.currentTrackIndex = index;
+                    this.backgroundMusic.src = this.playlist[index].url;
+                    
+                    if (this.isMusicEnabled) {
+                        this.backgroundMusic.play().catch(e => console.log('Play prevented:', e));
+                        document.getElementById('musicIndicator').style.display = 'block';
+                        document.getElementById('musicIndicator').textContent = `🎵 ${this.playlist[index].name}`;
+                    }
+                    
+                    // Auto-advance to next track when current one ends
+                    this.backgroundMusic.onended = () => {
+                        this.nextTrack();
+                    };
+                }
+            }
+            
+            nextTrack() {
+                if (this.playlist.length > 1) {
+                    this.currentTrackIndex = (this.currentTrackIndex + 1) % this.playlist.length;
+                    this.playTrack(this.currentTrackIndex);
+                }
+            }
+            
+            setupPlaylistNavigation() {
+                // Add playlist navigation if multiple tracks
+                if (this.playlist.length > 1) {
+                    // Add next track button to volume controls
+                    const audioControls = document.querySelector('.audio-controls');
+                    const nextBtn = document.createElement('div');
+                    nextBtn.className = 'audio-btn';
+                    nextBtn.textContent = '⏭️';
+                    nextBtn.title = 'Next Track';
+                    nextBtn.addEventListener('click', () => this.nextTrack());
+                    audioControls.appendChild(nextBtn);
+                }
+            }
+            
+            // Game sound effects
+            playCorrectSound() {
+                if (this.correctBuffer) {
+                    this.playBuffer(this.correctBuffer);
+                } else if (this.correctSound.src) {
+                    this.correctSound.currentTime = 0;
+                    this.correctSound.play().catch(e => console.log('Sound play prevented:', e));
+                }
+            }
+            
+            playWrongSound() {
+                if (this.wrongBuffer) {
+                    this.playBuffer(this.wrongBuffer);
+                } else if (this.wrongSound.src) {
+                    this.wrongSound.currentTime = 0;
+                    this.wrongSound.play().catch(e => console.log('Sound play prevented:', e));
+                }
+            }
+            
+            playLevelUpSound() {
+                if (this.levelUpBuffer) {
+                    this.playBuffer(this.levelUpBuffer);
+                } else if (this.levelUpSound.src) {
+                    this.levelUpSound.currentTime = 0;
+                    this.levelUpSound.play().catch(e => console.log('Sound play prevented:', e));
+                }
+            }
+            
+            saveAudioSettings() {
+                const settings = {
+                    isMusicEnabled: this.isMusicEnabled,
+                    isSoundEnabled: this.isSoundEnabled,
+                    volume: this.volume
+                };
+                localStorage.setItem('englishGameAudioSettings', JSON.stringify(settings));
+            }
+            
+            loadAudioSettings() {
+                const saved = localStorage.getItem('englishGameAudioSettings');
+                if (saved) {
+                    const settings = JSON.parse(saved);
+                    this.isMusicEnabled = settings.isMusicEnabled ?? true;
+                    this.isSoundEnabled = settings.isSoundEnabled ?? true;
+                    this.volume = settings.volume ?? 0.7;
+                    
+                    // Update UI
+                    if (!this.isMusicEnabled) {
+                        document.getElementById('musicToggle').textContent = '🔇';
+                        document.getElementById('musicToggle').classList.add('muted');
+                    }
+                    
+                    if (!this.isSoundEnabled) {
+                        document.getElementById('soundToggle').textContent = '🔇';
+                        document.getElementById('soundToggle').classList.add('muted');
+                    }
+                    
+                    // Update volume slider
+                    const fill = document.getElementById('volumeFill');
+                    const knob = document.getElementById('volumeKnob');
+                    fill.style.width = (this.volume * 100) + '%';
+                    knob.style.right = ((1 - this.volume) * 100) + '%';
+                    
+                    this.setVolume(this.volume);
+                }
+            }
+        }
+
+        // Initialize Audio Manager
+        let audioManager;
+
+        // Game state
+        let gameState = {
+            score: 0,
+            level: 1,
+            currentQuestion: 0,
+            totalQuestions: 10,
+            correctAnswers: 0,
+            streak: 0,
+            bestStreak: 0,
+            hintsUsed: 0,
+            questionsSkipped: 0,
+            gameRunning: true,
+            startTime: Date.now()
+        };
+
+        // Question database with different types
+        const questionDatabase = {
+            vocabulary: [
+                {
+                    question: "What does 'Beautiful' mean?",
+                    options: ["Ugly", "Pretty", "Sad", "Fast"],
+                    correct: 1,
+                    explanation: "'Beautiful' means attractive or pleasing to look at."
+                },
+                {
+                    question: "What is the opposite of 'Happy'?",
+                    options: ["Joyful", "Sad", "Excited", "Calm"],
+                    correct: 1,
+                    explanation: "'Sad' is the opposite of 'Happy'."
+                },
+                {
+                    question: "What does 'Intelligent' mean?",
+                    options: ["Stupid", "Smart", "Lazy", "Tired"],
+                    correct: 1,
+                    explanation: "'Intelligent' means having good understanding or being smart."
+                },
+                {
+                    question: "Choose the synonym for 'Big':",
+                    options: ["Small", "Large", "Tiny", "Narrow"],
+                    correct: 1,
+                    explanation: "'Large' means the same as 'Big'."
+                },
+                {
+                    question: "What does 'Generous' mean?",
+                    options: ["Selfish", "Kind", "Angry", "Quiet"],
+                    correct: 1,
+                    explanation: "'Generous' means willing to give and share with others."
+                }
+            ],
+            grammar: [
+                {
+                    question: "Choose the correct form: 'She ___ to school every day.'",
+                    options: ["go", "goes", "going", "gone"],
+                    correct: 1,
+                    explanation: "Use 'goes' with 'she' (third person singular) in present tense."
+                },
+                {
+                    question: "What is the past tense of 'run'?",
+                    options: ["runned", "ran", "runed", "running"],
+                    correct: 1,
+                    explanation: "'Ran' is the past tense of 'run'."
+                },
+                {
+                    question: "Choose the correct article: '___ apple'",
+                    options: ["a", "an", "the", "some"],
+                    correct: 1,
+                    explanation: "Use 'an' before words starting with vowel sounds."
+                },
+                {
+                    question: "Which is correct: 'I have ___ books.'",
+                    options: ["much", "many", "a lot", "few"],
+                    correct: 1,
+                    explanation: "Use 'many' with countable nouns like 'books'."
+                }
+            ],
+            pronunciation: [
+                {
+                    question: "How many syllables are in 'Beautiful'?",
+                    options: ["2", "3", "4", "5"],
+                    correct: 1,
+                    explanation: "'Beautiful' has 3 syllables: Beau-ti-ful."
+                },
+                {
+                    question: "Which word rhymes with 'Cat'?",
+                    options: ["Cut", "Hat", "Cot", "Cute"],
+                    correct: 1,
+                    explanation: "'Hat' rhymes with 'Cat' (both end in -at)."
+                }
+            ]
+        };
+
+        // DOM elements
+        const scoreElement = document.getElementById('score');
+        const levelElement = document.getElementById('level');
+        const streakElement = document.getElementById('streak');
+        const streakIndicator = document.getElementById('streakIndicator');
+        const questionTypeElement = document.getElementById('questionType');
+        const questionTextElement = document.getElementById('questionText');
+        const answersGrid = document.getElementById('answersGrid');
+        const progressFill = document.getElementById('progressFill');
+        const gameOverElement = document.getElementById('gameOver');
+        const finalScoreElement = document.getElementById('finalScore');
+        const wordsLearnedElement = document.getElementById('wordsLearned');
+        const accuracyElement = document.getElementById('accuracy');
+        const bestStreakElement = document.getElementById('bestStreak');
+
+        // Current question data
+        let currentQuestionData = null;
+
+        // Generate floating words background
+        function createFloatingWord() {
+            const words = ['LEARN', 'STUDY', 'ENGLISH', 'WORDS', 'PRACTICE', 'IMPROVE', 'VOCABULARY', 'GRAMMAR'];
+            const word = document.createElement('div');
+            word.className = 'floating-word';
+            word.textContent = words[Math.floor(Math.random() * words.length)];
+            word.style.left = Math.random() * 100 + '%';
+            word.style.animationDelay = Math.random() * 2 + 's';
+            document.getElementById('floatingWords').appendChild(word);
+            
+            setTimeout(() => {
+                word.remove();
+            }, 4000);
+        }
+
+        // Create floating words periodically
+        setInterval(createFloatingWord, 1500);
+
+        // Get random question from database
+        function getRandomQuestion() {
+            const types = Object.keys(questionDatabase);
+            const randomType = types[Math.floor(Math.random() * types.length)];
+            const questions = questionDatabase[randomType];
+            const randomQuestion = questions[Math.floor(Math.random() * questions.length)];
+            
+            return {
+                type: randomType,
+                data: randomQuestion
+            };
+        }
+
+        // Load new question
+        function loadNewQuestion() {
+            const questionObj = getRandomQuestion();
+            currentQuestionData = questionObj.data;
+            
+            // Update question display
+            questionTypeElement.textContent = questionObj.type.toUpperCase();
+            questionTextElement.textContent = questionObj.data.question;
+            
+            // Update answer options
+            const answerOptions = answersGrid.children;
+            for (let i = 0; i < answerOptions.length; i++) {
+                answerOptions[i].textContent = questionObj.data.options[i];
+                answerOptions[i].className = 'answer-option';
+                answerOptions[i].onclick = () => selectAnswer(i);
+            }
+            
+            // Update progress
+            const progress = (gameState.currentQuestion / gameState.totalQuestions) * 100;
+            progressFill.style.width = progress + '%';
+        }
+
+        // Handle answer selection
+        function selectAnswer(selectedIndex) {
+            if (!gameState.gameRunning || !currentQuestionData) return;
+            
+            const answerOptions = answersGrid.children;
+            const isCorrect = selectedIndex === currentQuestionData.correct;
+            
+            // Disable further clicks
+            for (let option of answerOptions) {
+                option.onclick = null;
+            }
+            
+            if (isCorrect) {
+                // Correct answer
+                answerOptions[selectedIndex].classList.add('correct');
+                gameState.score += 10 * gameState.level;
+                gameState.correctAnswers++;
+                gameState.streak++;
+                
+                if (gameState.streak > gameState.bestStreak) {
+                    gameState.bestStreak = gameState.streak;
+                }
+                
+                // Show streak indicator if streak >= 3
+                if (gameState.streak >= 3) {
+                    streakIndicator.style.display = 'block';
+                    streakElement.textContent = gameState.streak;
+                }
+                
+                // Play correct sound
+                if (audioManager) audioManager.playCorrectSound();
+                
+                // Create success effect
+                createSuccessEffect();
+                
+            } else {
+                // Wrong answer
+                answerOptions[selectedIndex].classList.add('wrong');
+                answerOptions[currentQuestionData.correct].classList.add('correct');
+                gameState.streak = 0;
+                streakIndicator.style.display = 'none';
+                
+                // Play wrong sound
+                if (audioManager) audioManager.playWrongSound();
+            }
+            
+            // Show explanation
+            setTimeout(() => {
+                alert(`${isCorrect ? '✅ Correct!' : '❌ Wrong!'}\n\n${currentQuestionData.explanation}`);
+                nextQuestion();
+            }, 1500);
+            
+            updateDisplay();
+        }
+
+        // Move to next question
+        function nextQuestion() {
+            gameState.currentQuestion++;
+            
+            if (gameState.currentQuestion >= gameState.totalQuestions) {
+                endGame();
+                return;
+            }
+            
+            // Level up every 5 questions
+            if (gameState.currentQuestion % 5 === 0) {
+                gameState.level++;
+                if (audioManager) audioManager.playLevelUpSound();
+                alert(`🎉 Level Up! Welcome to Level ${gameState.level}! 🎉`);
+            }
+            
+            loadNewQuestion();
+        }
+
+        // Create success effect
+        function createSuccessEffect() {
+            for (let i = 0; i < 8; i++) {
+                setTimeout(() => createFloatingWord(), i * 100);
+            }
+        }
+
+        // Update display elements
+        function updateDisplay() {
+            scoreElement.textContent = gameState.score;
+            levelElement.textContent = gameState.level;
+            
+            // Update progress
+            const progress = (gameState.currentQuestion / gameState.totalQuestions) * 100;
+            progressFill.style.width = progress + '%';
+        }
+
+        // End game
+        function endGame() {
+            gameState.gameRunning = false;
+            
+            // Calculate stats
+            const accuracy = Math.round((gameState.correctAnswers / gameState.totalQuestions) * 100);
+            const gameTime = Math.round((Date.now() - gameState.startTime) / 1000);
+            
+            // Update final stats
+            finalScoreElement.textContent = gameState.score;
+            wordsLearnedElement.textContent = gameState.correctAnswers;
+            accuracyElement.textContent = accuracy;
+            bestStreakElement.textContent = gameState.bestStreak;
+            
+            gameOverElement.style.display = 'block';
+            
+            // Save high score
+            const highScore = localStorage.getItem('englishLearningHighScore') || 0;
+            if (gameState.score > highScore) {
+                localStorage.setItem('englishLearningHighScore', gameState.score);
+            }
+        }
+
+        // Restart game
+        function restartGame() {
+            gameState = {
+                score: 0,
+                level: 1,
+                currentQuestion: 0,
+                totalQuestions: 10,
+                correctAnswers: 0,
+                streak: 0,
+                bestStreak: 0,
+                hintsUsed: 0,
+                questionsSkipped: 0,
+                gameRunning: true,
+                startTime: Date.now()
+            };
+            
+            gameOverElement.style.display = 'none';
+            streakIndicator.style.display = 'none';
+            
+            updateDisplay();
+            loadNewQuestion();
+        }
+
+        // Share progress
+        function shareProgress() {
+            const shareText = `📚 I just learned ${gameState.correctAnswers} new English words and scored ${gameState.score} points! 🎉 Join me in this fun English learning game with music! 🌟 #EnglishLearning #Education #Vocabulary`;
+            document.getElementById('shareText').textContent = shareText;
+            document.getElementById('shareOverlay').style.display = 'flex';
+        }
+
+        // Copy share text
+        function copyShareText() {
+            const shareText = document.getElementById('shareText').textContent;
+            navigator.clipboard.writeText(shareText).then(() => {
+                alert('📋 Text copied! Share it everywhere! 🎉');
+            });
+        }
+
+        // Share on social media
+        function shareOnSocial(platform) {
+            const shareText = document.getElementById('shareText').textContent;
+            const gameUrl = window.location.href;
+            
+            let url = '';
+            if (platform === 'twitter') {
+                url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(gameUrl)}`;
+            } else if (platform === 'facebook') {
+                url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(gameUrl)}&quote=${encodeURIComponent(shareText)}`;
+            }
+            
+            window.open(url, '_blank');
+        }
+
+        // Close share overlay
+        function closeShare() {
+            document.getElementById('shareOverlay').style.display = 'none';
+        }
+
+        // Control button functions
+        document.getElementById('hintBtn').addEventListener('click', () => {
+            if (!gameState.gameRunning || !currentQuestionData) return;
+            
+            gameState.hintsUsed++;
+            const hintMessages = [
+                "💡 Think about the meaning of the word!",
+                "💡 Consider the context of the sentence!",
+                "💡 What would make the most sense here?",
+                "💡 Remember your English lessons!"
+            ];
+            
+            const randomHint = hintMessages[Math.floor(Math.random() * hintMessages.length)];
+            alert(randomHint);
+        });
+
+        document.getElementById('skipBtn').addEventListener('click', () => {
+            if (!gameState.gameRunning) return;
+            
+            if (confirm('Are you sure you want to skip this question? You won\'t get points for it.')) {
+                gameState.questionsSkipped++;
+                gameState.streak = 0;
+                streakIndicator.style.display = 'none';
+                nextQuestion();
+            }
+        });
+
+        document.getElementById('pauseBtn').addEventListener('click', () => {
+            if (gameState.gameRunning) {
+                gameState.gameRunning = false;
+                document.getElementById('pauseBtn').textContent = '▶️';
+                alert('⏸️ Game Paused! Click the play button to continue.');
+            } else {
+                gameState.gameRunning = true;
+                document.getElementById('pauseBtn').textContent = '⏸️';
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (!gameState.gameRunning) return;
+            
+            if (e.key >= '1' && e.key <= '4') {
+                const index = parseInt(e.key) - 1;
+                selectAnswer(index);
+            } else if (e.key === 'h' || e.key === 'H') {
+                document.getElementById('hintBtn').click();
+            } else if (e.key === 's' || e.key === 'S') {
+                document.getElementById('skipBtn').click();
+            } else if (e.key === 'm' || e.key === 'M') {
+                if (audioManager) audioManager.toggleMusic();
+            }
+        });
+
+        // Touch gestures for mobile
+        let touchStartX = 0;
+        let touchStartY = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            if (!gameState.gameRunning) return;
+            
+            const touchEndX = e.changedTouches[0].clientX;
+            const touchEndY = e.changedTouches[0].clientY;
+            const diffX = touchStartX - touchEndX;
+            const diffY = touchStartY - touchEndY;
+            
+            // Swipe gestures
+            if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+                if (diffX > 0) {
+                    // Swipe left - skip question
+                    document.getElementById('skipBtn').click();
+                } else {
+                    // Swipe right - hint
+                    document.getElementById('hintBtn').click();
+                }
+            }
+        });
+
+        // Initialize game
+        function initGame() {
+            // Initialize audio manager first
+            audioManager = new AudioManager();
+            
+            updateDisplay();
+            loadNewQuestion();
+            
+            // Create initial floating words
+            for (let i = 0; i < 5; i++) {
+                setTimeout(createFloatingWord, i * 300);
+            }
+        }
+
+        // Auto-save progress
+        setInterval(() => {
+            if (gameState.gameRunning) {
+                localStorage.setItem('englishLearningProgress', JSON.stringify(gameState));
+            }
+        }, 30000); // Save every 30 seconds
+
+        // Load saved progress
+        function loadSavedProgress() {
+            const saved = localStorage.getItem('englishLearningProgress');
+            if (saved) {
+                const savedState = JSON.parse(saved);
+                if (confirm('📚 Continue your previous learning session?')) {
+                    gameState = { ...gameState, ...savedState };
+                    updateDisplay();
+                }
+            }
+        }
+
+        // Start the game
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSavedProgress();
+            initGame();
+        });
+
+        console.log('📚 English Learning Game with Audio Ready! 🎉');
+        console.log('Perfect for students, teachers, and language learners! 🌟');
+        console.log('Features: Background music, sound effects, audio controls! 🎵');
+        console.log('Keyboard shortcuts: 1-4 (answers), H (hint), S (skip), M (music toggle)');
+    </script>
+</body>
+</html>
